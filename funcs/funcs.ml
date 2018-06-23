@@ -1,45 +1,83 @@
-let rec sum_inner lst a =
-  match lst with
-  | [] -> a
-  | x::xs -> sum_inner xs (x + a)
-;;
-
-let sum lst = 
-  sum_inner lst 0
-;;
-
-let dot_product v1 v2 =
-  let (x,y,z) = v1 in
-    let (a,b,c) = v2 in
-      x*a + y*b + z*c
-;;
-
-let a = fun x -> 
-          fun y -> 
-            fun z -> 
-              x + y + z
-;;
-
-let rec take_inner n lst a =
+let rec power x n =
   match n with
-  | 0 -> a
+    0 -> 1
+  | _ -> x * power x (n-1);;
+
+let rec sumints x =
+  match x with
+    0 -> 0
+  | _ -> x + sumints (x-1);;
+
+let isvowel c =
+  match c with
+    'a' | 'e' | 'i' | 'o'| 'u' -> true
+  | _ -> false;;
+
+Format.printf "%b\n" (isvowel 'a');;
+
+let rec count_true l =
+  match l with
+    [] -> 0
+  | true::t -> 1 + count_true t
+  | false::t -> count_true t
+;;
+
+let mk_palindrome l =
+  l @ List.rev l
+;;
+
+let is_palindrome l =
+  l = List.rev l
+;;
+
+let rec drop_last l =
+  match l with
+    [] -> []
+  | [_] -> []
+  | h::t -> h :: drop_last t
+;;
+
+let drop' l =
+  match l with
+    [] -> []
+  | list -> List.take list (List.length l - 1)
+;;
+
+let rec member x xs =
+  match xs with
+    [] -> false
+  | h::t -> x = h || member x t
+;;
+
+let rec make_set l =
+  match l with
+    [] -> []
+  | h::t -> if member h t then make_set t else h :: make_set t
+;;
+
+let rec rev_inner a l =
+  match l with
+    [] -> a
+  | h::t -> rev_inner (h :: a) t
+;;
+
+let rev l =
+  rev_inner [] l
+;;
+
+let head = function
+  | [] -> 0
+  | x::_ -> x
+;;
+
+let rec nth_inner n lst a =
+  match n with
+  | 0 -> head a
   | n -> match lst with
-         | [] -> a
-         | x::xs -> take_inner (n-1) xs (x::a)
+         | [] -> n
+         | x::xs -> nth (n-1) xs (x::a)
 ;;
 
-let rec rev_inner lst a =
-  match lst with
-  | [] -> a
-  | x::xs -> rev_inner xs (x::a)
+let nth n lst = nth_inner n lst []
 ;;
 
-(* Tail recursive reverse *)
-let rev lst =
-  rev_inner lst []
-;;
-
-(* Tail recursive take *)
-let take n lst = 
-  rev (take_inner n lst [])
-;;

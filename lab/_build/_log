@@ -1,0 +1,12 @@
+### Starting build.
+# Target: lab03_test.ml.depends, tags: { package(oUnit), extension:ml, file:lab03_test.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules lab03_test.ml > lab03_test.ml.depends
+# Target: lab03.ml.depends, tags: { package(oUnit), extension:ml, file:lab03.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules lab03.ml > lab03.ml.depends # cached
+# Target: lab03.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:lab03.cmo, file:lab03.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o lab03.cmo lab03.ml # cached
+# Target: lab03_test.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:lab03_test.cmo, file:lab03_test.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o lab03_test.cmo lab03_test.ml
+# Target: lab03_test.byte, tags: { package(oUnit), byte, dont_link_with, extension:byte, file:lab03_test.byte, link, ocaml, program, quiet, traverse }
+ocamlfind ocamlc -linkpkg -package oUnit lab03.cmo lab03_test.cmo -o lab03_test.byte
+# Compilation successful.
