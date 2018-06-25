@@ -21,7 +21,7 @@ type shape =
 
 let area = function
   | Point _ -> 0.0
-  | Circle (_,r) -> pi *. (r ** 2.0)
+  | Circle (_,r) -> Float.pi *. (r ** 2.0)
   | Rect ((x1,y1),(x2,y2)) -> 
     let w = x2 -. x1 in
     let h = y2 -. y1 in
@@ -50,3 +50,48 @@ let rec sum : string_or_int_list -> int = function
 ;;
 
 let three = sum [String "2"; Int 1];;
+
+type t = Left of int | Right of int;;
+let x = Left 1
+let double_right = function
+  | Left i -> i
+  | Right i -> 2*i
+;;
+
+(* Variant type to construct something similar to a list *)
+type intlist = Nil | Cons of int * intlist
+
+let lst3 = Cons (3, Nil) (* Similar to 3::[] or [3] *)
+let lst123 = Cons(1, Cons(2, lst3)) (* Similar to [1;2;3] *)
+
+let rec sum (l:instlist) : int =
+  match l with
+  | Nil -> 0
+  | Cons(h,t) -> h + sum t
+;;
+
+let rec lenght : instlist =
+  | Nil -> 0
+  | Cons(_,t) -> 1 + lenght t
+;;
+
+let empty : intlist =
+  | Nil -> true
+  | Cons _ -> false
+;;
+
+(* Parameterized variants *)
+type 'a mylist = Nil | Cons of 'a * 'a mylist;;
+
+let list3 = Cons (3, Nil) (* Similar to [3] *)
+let lst_hi = Cons ("hi", Nil) (* Similar to ["hi"] *)
+
+let rec length' : 'a mylist -> int = function
+  | Nil -> 0
+  | Cons (_,t) -> 1 + length' t
+;;
+
+let empty : 'a mylist -> bool = function
+  | Nil -> true
+  | Cons _ -> false
+;;
