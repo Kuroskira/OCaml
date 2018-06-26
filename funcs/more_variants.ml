@@ -21,11 +21,7 @@ type shape =
 ;;
 
 let area = function
-<<<<<<< HEAD
   | Point _      -> 0.0
-=======
-  | Point _ -> 0.0
->>>>>>> bae65d18afc0703fe8a95ec9b0598d696fb4fb66
   | Circle (_,r) -> Float.pi *. (r ** 2.0)
   | Rect ((x1,y1),(x2,y2)) -> 
     let w = x2 -. x1 in
@@ -69,18 +65,18 @@ type intlist = Nil | Cons of int * intlist
 let lst3 = Cons (3, Nil) (* Similar to 3::[] or [3] *)
 let lst123 = Cons(1, Cons(2, lst3)) (* Similar to [1;2;3] *)
 
-let rec sum (l:instlist) : int =
+let rec sum (l:intlist) : int =
   match l with
-  | Nil -> 0
-  | Cons(h,t) -> h + sum t
+    | Nil -> 0
+    | Cons(h,t) -> h + sum t
 ;;
 
-let rec lenght : instlist =
+let rec length : intlist -> int = function
   | Nil -> 0
-  | Cons(_,t) -> 1 + lenght t
+  | Cons (_,t) -> 1 + length t
 ;;
 
-let empty : intlist =
+let empty : intlist -> bool = function
   | Nil -> true
   | Cons _ -> false
 ;;
@@ -99,4 +95,105 @@ let rec length' : 'a mylist -> int = function
 let empty : 'a mylist -> bool = function
   | Nil -> true
   | Cons _ -> false
+;;
+
+(* type 'a tree = 
+  | Leaf 
+  | Node of 'a * 'a tree * 'a tree
+;; *)
+
+type 'a tree =
+  | Leaf
+  | Node of 'a node
+
+and 'a node = {
+  value: 'a;
+  left:  'a tree;
+  right: 'a tree
+}
+
+(* represents
+      2
+     / \ 
+    1   3  *)
+let t =
+  Node {
+    value = 2;
+    left = Node {value = 1; left = Leaf; right = Leaf};
+    right = Node {value = 3; left = Leaf; right = Leaf}
+  };;
+
+(* [mem x t] returns [true] if and only if [x] is a value at some
+ * node in tree [t]. 
+ *)
+let rec mem x = function
+  | Leaf -> false
+  | Node {value;left;right} -> value = x || mem x left || mem x right
+;;
+
+(* a function that computes the preorder traversal of a tree, 
+ * in which each node is visited before any of 
+ * its children, by constructing a list in which the values occur 
+ * in the order in which they would be visited 
+ *)
+let preorder_lin t =
+  let rec pre_acc acc = function
+    | Leaf -> acc
+    | Node {value;left;right} -> value :: (pre_acc (pre_acc acc right) left)
+  in pre_acc [] t
+;;
+
+(* NATURAL NUMBERS REPRESENTATION *)
+type nat = Zero | Succ of nat;;
+
+let zero = Zero;;
+let one = Succ zero;;
+let two = Succ one;;
+let three = Succ two;;
+let four = Succ three;;
+
+let iszero (n:nat) : bool = 
+  match n with
+    | Zero -> true
+    | Succ m -> false
+;;
+
+let pred (n:nat) : nat =
+  match n with
+    | Zero -> failwith "pred Zero is undefined"
+    | Succ m -> m
+;;
+
+(* Function to add two nat numbers *)
+let rec add (n1:nat) (n2:nat) : nat =
+  match n1 with
+    | Zero -> n2
+    | Succ n_minus_1 -> add n_minus_1 (Succ n2)
+;;
+
+(* Convert nat into int and vice-versa *)
+let rec int_of_nat (n:nat) : int =
+  match n with
+    | Zero -> 0
+    | Succ m -> 1 + int_of_nat m
+;;
+
+let rec nat_of_int (i:int) : nat =
+  if i < 0 then failwith "nat_of_int is undefined on negative ints"
+  else if i = 0 then Zero
+  else Succ (nat_of_int (i-1))
+;;
+
+(* Determine if a nat number is even or odd usind mutual recursion *)
+let rec
+  even (n:nat) : bool =
+    match n with
+      | Zero -> true
+      | Succ m -> odd m
+
+and
+  odd (n:nat) : bool =
+    match n with
+      | Zero -> false
+      | Succ m -> even m
 ;;
