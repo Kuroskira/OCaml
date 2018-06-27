@@ -137,7 +137,7 @@ let rec lookup k = function
                            then Some v
                            else match lookup k l with
                                   | None -> lookup k r
-                                  | Some n -> Some n
+                                  | value -> value
 ;;
 
 let rec insert k v = function
