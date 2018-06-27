@@ -123,28 +123,3 @@ let rec list_max_string = function
   | [x] -> string_of_int x
   | h::t -> string_of_int (max h (int_of_string (list_max_string t)))
 ;;
-
-(* Dictionaries with Trees *)
-let d = 
-  Node((2,"two"), 
-    Node((1,"one"),Leaf,Leaf),
-    Node((3,"three"),Leaf,Leaf)
-  )
-
-let rec lookup k = function
-    | Leaf -> None
-    | Node ((k',v),l,r) -> if k = k'
-                           then Some v
-                           else match lookup k l with
-                                  | None -> lookup k r
-                                  | Some n -> Some n
-;;
-
-let rec insert k v = function
-    | Leaf -> Node ((k,v),Leaf,Leaf)
-    | Node ((k',v'),l,r) -> if k = k' 
-                            then Node ((k',v),l,r)
-                            else if k > k' 
-                            then Node ((k',v'),l,insert k v r)
-                            else Node ((k',v'),insert k v l,r)
-;;
