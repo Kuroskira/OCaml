@@ -88,27 +88,27 @@ let concat lst = fold_right (^) lst ""
 let rec fold_left op acc = function
   | [] -> acc
   | h::t -> fold_left op (op acc h) t
+;;
 
-let sum_l    = fold_left (+) 0
-let concat_l = fold_left (^) ""
-
+let sum    = fold_left (+) 0  
+let concat = fold_left (^) ""
 (* Tail recursive implementation of fold_right, using fold left *)
-let fold_right_tr f l accu =
-  List.fold_left (fun acc elt -> f elt acc) accu (List.rev l)
+(* let fold_right_tr f l accu =
+  List.fold_left (fun acc elt -> f elt acc) accu (List.rev l) *)
 
 (* Folding is so powerful that we can write many other list functions in terms of fold_left or fold_right! *)
-let length l = List.fold_left (fun a _ -> a+1) 0 l
-let rev l = List.fold_left (fun a x -> x::a) [] l
-let map f l = List.fold_right (fun x a -> (f x)::a) l []
-let filter f l = List.fold_right (fun x a -> if f x then x::a else a) l []
+let length l = fold_left (fun a _ -> a+1) 0 l
+let rev l = fold_left (fun a x -> x::a) [] l
+let map f l = fold_right (fun x a -> (f x)::a) l []
+let filter f l = fold_right (fun x a -> if f x then x::a else a) l []
 
 type 'a tree = 
   | Leaf 
   | Node of 'a * 'a tree * 'a tree 
 
-type 'a list =
+type 'a list' =
   | Nil
-  | Cons of 'a * 'a list
+  | Cons of 'a * 'a list'
 
 let rec foldlist init op = function
   | Nil -> init
