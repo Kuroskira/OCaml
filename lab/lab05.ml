@@ -30,10 +30,6 @@ let seven_of_spades = {
 type quad = I | II | III | IV
 type sign = Neg | Zero | Pos
 
-let negate x =
-  -x
-;;
-
 let sign (x:int) : sign =
   if x = 0 then Zero
   else if x > 0 then Pos
