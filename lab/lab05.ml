@@ -40,6 +40,12 @@ let sign (x:int) : sign =
   else Neg
 ;;
 
+let sign' x =
+  if x = 0 then `Zero
+  else if x > 0 then `Pos
+  else `Neg
+;;
+
 let quadrant : int*int -> quad option = fun (x,y) ->
   match (sign x, sign y) with
     | (Pos,Pos) -> Some I
@@ -49,6 +55,15 @@ let quadrant : int*int -> quad option = fun (x,y) ->
     | (Zero,_) -> None
     | (_,Zero) -> None
 ;;
+
+let quadrant' = fun (x,y) ->
+  match (sign' x, sign' y) with
+    | (`Pos,`Pos) -> Some `I
+    | (`Neg,`Pos) -> Some `II
+    | (`Neg,`Neg) -> Some `III
+    | (`Pos,`Neg) -> Some `IV
+    | (`Zero,_) -> None
+    | (_,`Zero) -> None 
 
 let quadrant_when : int*int -> quad option = function
   | (n,m) when n > 0 && m > 0 -> Some I
@@ -88,9 +103,9 @@ let t2 =
       Node (1, Leaf, Leaf),
       Node (3, Leaf, Leaf)
     ),
-    Node (5,
+    Node (7,
       Node (6, Leaf, Leaf),
-      Node (7, Leaf, Leaf)
+      Node (5, Leaf, Leaf)
     )
   );;
 
@@ -148,3 +163,31 @@ let rec insert k v = function
                             then Node ((k',v'),l,insert k v r)
                             else Node ((k',v'),insert k v l,r)
 ;;
+
+type 'a tstate = Empty | Max of 'a | Min of 'a | Not_Invariant
+
+let rec maxt = function
+  | Leaf -> Empty
+  | Node (v,Leaf,Leaf) -> Max v
+  | Node (v,_,r) -> match maxt r with
+                      | Empty -> Max v
+                      | Max n -> if v > n then Max v else Max n
+  | _ -> Empty
+;;
+
+let rec mint = function
+  | Leaf -> Empty
+  | Node (v,Leaf,Leaf) -> Min v
+  | Node (v,l,_) -> match mint l with
+                      | Empty -> Min v
+                      | Min n -> if v < n then Min v else Min n
+  | _ -> Empty
+;;
+
+(* TODO: try to implement it as said in the exercise *)
+let rec is_bst = function
+  | Leaf -> false
+  | Node ((k,v),Leaf,Leaf) -> true
+  | Node ((k,v),l,r) -> match (maxt l, mint r) with
+                          | (Max (n,_), Min (m,_)) -> n < k && m > k && is_bst l && is_bst r
+  | _ -> false
