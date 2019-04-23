@@ -122,3 +122,20 @@ let rec foldtree init op = function
 let size t = foldtree 0 (fun _ l r -> 1 + l + r) t
 let depth t = foldtree 0 (fun _ l r -> 1 + max l r) t
 let preorder t = foldtree [] (fun x l r -> [x] @ l @ r) t
+
+(* PIPELINING *)
+(*recursive sum of squares *)
+(* let sum_sq n =
+  let rec loop i sum =
+    if i > n then sum
+    else loop (i+1) (sum + i * i)
+  in loop 0 0 *)
+
+(* Smae function using pipelining *)
+let square' x = x * x
+
+let sum_sq n =
+  0--n
+  |> rev                    (* [0;1;2;...;n]   *)
+  |> map square  (* [n*n;...;4;1;0] *)
+  |> sum                  (*  n*n+...+4+1+0  *)
